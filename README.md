@@ -13,7 +13,7 @@
 3. Mayaを再起動します。
 
 4. 以下のコマンドを実行します。  
-```
+```py
 import ezCreateMaterial
 reload(ezCreateMaterial)
 ezCreateMaterial.run()
