@@ -13,6 +13,6 @@
 3. Mayaを再起動します。
 
 4. 以下のコマンドを実行します。  
-        import ezCreateMaterial
-        reload(ezCreateMaterial)
-        ezCreateMaterial.run()
+    import ezCreateMaterial
+    reload(ezCreateMaterial)
+    ezCreateMaterial.run()
