@@ -74,8 +74,6 @@ def normalMapDecision(ws):
 
 
 def importTextureFile(ws):
-    global enum
-    enum = 0
     if pm.checkBox("cbDif", q=True, v=True) or pm.checkBox("cbMet", q=True, v=True) or pm.checkBox("cbRou", q=True, v=True) or pm.checkBox("cbNor", q=True, v=True):
         coord2d = pm.shadingNode(
             "place2dTexture", asUtility=True, name="Coords")
@@ -83,27 +81,23 @@ def importTextureFile(ws):
             global file_diff
             file_diff = pm.shadingNode("file", asTexture=True, name="Diffuse")
             pm.defaultNavigation(ce=True, s=coord2d, d=file_diff)
-            enum = enum + 1
 
         if pm.checkBox("cbMet", q=True, v=True):
             global file_metal
             file_metal = pm.shadingNode(
                 "file", asTexture=True, name="Metalness")
             pm.defaultNavigation(ce=True, s=coord2d, d=file_metal)
-            enum = enum + 1
 
         if pm.checkBox("cbRou", q=True, v=True):
             global file_rough
             file_rough = pm.shadingNode(
                 "file", asTexture=True, name="Roughness")
             pm.defaultNavigation(ce=True, s=coord2d, d=file_rough)
-            enum = enum + 1
 
         if pm.checkBox("cbNor", q=True, v=True):
             global file_normal
             file_normal = pm.shadingNode("file", asTexture=True, name="Normal")
             pm.defaultNavigation(ce=True, s=coord2d, d=file_normal)
-            enum = enum + 1
 
         else:
             pass
