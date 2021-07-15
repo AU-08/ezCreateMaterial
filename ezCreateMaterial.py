@@ -220,7 +220,7 @@ def run():
                         normalMapDecision, ws))
                 pm.separator()
                 with pm.autoLayout():
-                    pm.button(label="Create Rig",
+                    pm.button(label="Create Material",
                               command=pm.Callback(createAll, ws))
 
 
