@@ -182,7 +182,7 @@ def createAll(ws):
 
 
 def run():
-    with pm.window(t="EzMaterialCreate") as wn:
+    with pm.window(t="EzCreate") as wn:
         with pm.columnLayout(w=400):
             ws = {}
             with pm.frameLayout(l="Select Maps", w=400):
