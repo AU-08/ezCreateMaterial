@@ -1,78 +1,97 @@
 import pymel.core as pm
 
 
-def selectDiff(ws):
+# Open explorer
+def browserDiff(ws):
     try:
         imgFilter = "ImageFiles (*.*)"
         mapDiff = pm.fileDialog2(ff=imgFilter, ds=1, fm=1)
-        #global txDiff
         textDiff = mapDiff[0]
         pm.textField("tfDiffuse", edit=1, text=textDiff)
     except TypeError:
         pass
 
 
-def selectMetal(ws):
+def browserMetal(ws):
     try:
         imgFilter = "ImageFiles (*.*)"
         mapMetal = pm.fileDialog2(ff=imgFilter, ds=1, fm=1)
-        #global txMetal
         textMetal = mapMetal[0]
         pm.textField("tfMetalness", edit=1, text=textMetal)
     except TypeError:
         pass
 
 
-def selectRough(ws):
+def browserRough(ws):
     try:
         imgFilter = "ImageFiles (*.*)"
         mapRough = pm.fileDialog2(ff=imgFilter, ds=1, fm=1)
-        #global txRough
         textRough = mapRough[0]
         pm.textField("tfRoughness", edit=1, text=textRough)
     except TypeError:
         pass
 
 
-def selectNormal(ws):
+def browserNormal(ws):
     try:
         imgFilter = "ImageFiles (*.*)"
         mapNormal = pm.fileDialog2(ff=imgFilter, ds=1, fm=1)
-        #global txNormal
         textNormal = mapNormal[0]
         pm.textField("tfNormal", edit=1, text=textNormal)
     except TypeError:
         pass
 
 
-def diffMapDecision(ws):
+# Get file path
+def setDiffMapPath(ws):
     global txDiff
     txDiff = ""
     text_in_d = pm.textField('tfDiffuse', q=True, text=True)
     txDiff = text_in_d
 
 
-def metalMapDecision(ws):
+def setMetalMapPath(ws):
     global txMetal
     txMetal = ""
     text_in_m = pm.textField('tfMetalness', q=True, text=True)
-    txDiff = text_in_m
+    txMetal = text_in_m
 
 
-def roughMapDecision(ws):
+def setRoughMapPath(ws):
     global txRough
     txRough = ""
     text_in_r = pm.textField('tfRoughness', q=True, text=True)
-    txDiff = text_in_r
+    txRough = text_in_r
 
 
-def normalMapDecision(ws):
+def setNormalMapPath(ws):
     global txNormal
     txNormal = ""
     text_in_n = pm.textField('tfNormal', q=True, text=True)
-    txDiff = text_in_n
+    txNormal = text_in_n
 
 
+def selectDiff(ws):
+    browserDiff(ws)
+    setDiffMapPath(ws)
+
+
+def selectMetal(ws):
+    browserMetal(ws)
+    setMetalMapPath(ws)
+
+
+def selectRough(ws):
+    browserRough(ws)
+    setRoughMapPath(ws)
+
+
+def selectNormal(ws):
+    browserNormal(ws)
+    setNormalMapPath(ws)
+
+
+# Import textures
 def importTextureFile(ws):
     if pm.checkBox("cbDif", q=True, v=True) or pm.checkBox("cbMet", q=True, v=True) or pm.checkBox("cbRou", q=True, v=True) or pm.checkBox("cbNor", q=True, v=True):
         coord2d = pm.shadingNode(
@@ -106,6 +125,7 @@ def importTextureFile(ws):
             "None of the checkboxes are checked. Please select some checkbox.")
 
 
+# Setup aiStandardSurface
 def materialSetup(ws):
     if pm.checkBox("cbDif", q=True, v=True) or pm.checkBox("cbMet", q=True, v=True) or pm.checkBox("cbRou", q=True, v=True) or pm.checkBox("cbNor", q=True, v=True):
         ai_mat = pm.shadingNode("aiStandardSurface",
@@ -119,9 +139,10 @@ def materialSetup(ws):
                 pm.setAttr(file_diff + ".ignoreColorSpaceFileRules", 1)
                 pm.setAttr(file_diff + ".fileTextureName",
                            txDiff, type="string")
-            except:
+            except NameError:
                 pm.warning(
                     "DiffuseMap is not selected. Please select DiffuseMap and click OK button")
+        print txDiff
 
         # Metalness
         if pm.checkBox("cbMet", q=True, v=True):
@@ -181,43 +202,45 @@ def createAll(ws):
     materialSetup(ws)
 
 
+# ui
 def run():
-    with pm.window(t="EzCreate") as wn:
+    with pm.window(t="EzCreateMaterial") as wn:
+        global txDiff, txMetal, txRough, txNormal
+        txDiff = ""
+        txMetal = ""
+        txRough = ""
+        txNormal = ""
         with pm.columnLayout(w=400):
             ws = {}
             with pm.frameLayout(l="Select Maps", w=400):
                 pm.separator()
                 with pm.horizontalLayout():
                     pm.checkBox("cbDif", l="Diffuse", v=True)
-                    pm.textField("tfDiffuse", text="not selected", w=200)
-                    pm.button(label="Select", w=60,
-                              command=pm.Callback(selectDiff, ws))
-                    pm.button(label="OK", command=pm.Callback(
-                        diffMapDecision, ws))
+                    pm.textField("tfDiffuse", text="not selected",
+                                 cc=pm.Callback(setDiffMapPath, ws), w=230)
+                    pm.symbolButton("browser1", image="navButtonBrowse.png",
+                                    command=pm.Callback(selectDiff, ws))
                 pm.separator()
                 with pm.horizontalLayout():
                     pm.checkBox("cbMet", l="Metalness", v=True)
-                    pm.textField("tfMetalness", text="not selected", w=200)
-                    pm.button(label="Select", w=60,
-                              command=pm.Callback(selectMetal, ws))
-                    pm.button(label="OK", command=pm.Callback(
-                        metalMapDecision, ws))
+                    pm.textField("tfMetalness", text="not selected",
+                                 cc=pm.Callback(setMetalMapPath, ws), w=230)
+                    pm.symbolButton("browser2", image="navButtonBrowse.png",
+                                    command=pm.Callback(selectMetal, ws))
                 pm.separator()
                 with pm.horizontalLayout():
                     pm.checkBox("cbRou", l="Roughness", v=True)
-                    pm.textField("tfRoughness", text="not selected", w=200)
-                    pm.button(label="Select", w=60,
-                              command=pm.Callback(selectRough, ws))
-                    pm.button(label="OK", command=pm.Callback(
-                        roughMapDecision, ws))
+                    pm.textField("tfRoughness", text="not selected",
+                                 cc=pm.Callback(setRoughMapPath, ws), w=230)
+                    pm.symbolButton("browser3", image="navButtonBrowse.png",
+                                    command=pm.Callback(selectRough, ws))
                 pm.separator()
                 with pm.horizontalLayout():
                     pm.checkBox("cbNor", l="Normal", v=True)
-                    pm.textField("tfNormal", text="not selected", w=200)
-                    pm.button(label="Select", w=60,
-                              command=pm.Callback(selectNormal, ws))
-                    pm.button(label="OK", command=pm.Callback(
-                        normalMapDecision, ws))
+                    pm.textField("tfNormal", text="not selected",
+                                 cc=pm.Callback(setNormalMapPath, ws), w=230)
+                    pm.symbolButton("browser4", image="navButtonBrowse.png",
+                                    command=pm.Callback(selectNormal, ws))
                 pm.separator()
                 with pm.autoLayout():
                     pm.button(label="Create Material",
