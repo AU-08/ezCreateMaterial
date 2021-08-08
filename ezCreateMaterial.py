@@ -246,5 +246,3 @@ def run():
                     pm.button(label="Create Material",
                               command=pm.Callback(createAll, ws))
 
-
-run()
